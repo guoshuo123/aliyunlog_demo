@@ -1,5 +1,34 @@
-日志库操作
+aliyun-log 简单应用
 
+    JS/Web Tracking 采集日志
+        引入文件 js/aliLog/loghub-tracking.js
+        <script>
+            var logger = new window.Tracker('host', 'project', 'logstore');
+            logger.push({
+                aaaa: '657578568',
+                mobile: '13344564852',
+                name: '测试测试测试',
+                href: 'www.demo.com',
+                data: {
+                    'user': 'guoshuo1',
+                    'data1': 234234,
+                    'msg': {
+                        'code': '0',
+                        'content': 'success',
+                    }
+                }
+            });
+        
+            logger.logger();
+        </script>
+    注: LogHub支持客户端、网页、协议、SDK/API等多种日志无损采集方式，所有采集方式均基于Restful API实现，除此之外您也可以通过API/SDK实现新的采集方式。
+        详见: https://help.aliyun.com/document_detail/28981.html?spm=a2c4g.11186623.6.574.119777a88tjGuB
+        
+    PHP SDK
+        下载地址: https://github.com/aliyun/aliyun-log-php-sdk
+        
+        本文提供PHP简单的日志操作 例见: index.php    
+    
     功能优势
         1. 实时：写入后可以立即被分析。
         2. 速度快：
