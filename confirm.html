@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>
+        百城计划
+    </title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/confirm.css">
+</head>
+
+<body>
+    <div class="contentwrap">
+        <form action="" method="post" enctype="multipart/form-data">
+            <div class="content cf">
+                <div class="company cf">
+                    <span class="fl label">姓名：</span>
+                    <input type="text" class="fl" placeholder="请填写您的姓名" name="">
+                </div>
+                <div class="company cf ">
+                    <span class="fl label">手机：</span>
+                    <input type="text" class="fl" name="" placeholder="请输入手机号码" id="signupform-mobile">
+                </div>
+                <div class="company cf">
+                    <span class="fl label">验证码：</span>
+                    <div class="formitem fl">
+                        <input type="text" name="" placeholder="请输入验证码" class="code fl" id="phone_code" />
+                        <div class="fr send">
+                            <button type="button" class="extraction" id="getVcode" onclick="Member.get_code();">获取验证码</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="company cf">
+                    <span class="fl label">机构名称：</span>
+                    <input type="text" class="fl" placeholder="请填写您的机构名称" name="">
+                </div>
+                <div class="company cf">
+                    <span class="fl label">职位：</span>
+                    <input type="text" class="fl" placeholder="请填写您的职位" name="">
+                </div>
+                <div class="company cf">
+                    <span class="fl label">城市：</span>
+                    <input type="text" class="fl" placeholder="请填写您的城市" name="">
+                </div>
+                <div class="company cf">
+                    <span class="fl label lineheight">需求信息：</span>
+                    <textarea class="fl" name="" placeholder="请简述您的需求"></textarea>
+                </div>
+            </div>
+            <div class="error"></div>
+            <div class="text-center btnwrap">
+                <button type="button" class="sub-btn" id="submit_btn">提交</button>
+            </div>
+        </form>
+    </div>
+</body>
+<script src="js/flexible.js"></script>
+<script src="js/jquery-2.2.0.min.js"></script>
+<script type="text/javascript">
+var Member = {
+    register: function() {
+        var mobile = $.trim($('#signupform-mobile').val()),
+            vcode = $.trim($('#phone_code').val());
+        if (mobile == '') {
+            $('.error').html('请输入你的手机号');
+            return false;
+        } else {
+            if (!this.check_phone(mobile)) {
+                $('.error').html('手机格式不正确');
+                return false;
+            }
+        }
+        if (vcode == '') {
+            $('.error').html('请输入手机验证码');
+            return false;
+        }
+
+        var data = {
+            mobile: mobile,
+            vcode: vcode,
+            action: ''
+        };
+        $.post('#', data, function(rep) {
+            if (rep.status == 1) {
+
+            } else {
+
+            }
+
+
+        }, 'json');
+    },
+
+    check_phone: function(phone) {
+        var regname = /^(13|14|15|17|18)\d{9}$/i;
+        if (!regname.exec(phone)) {
+            return false;
+        }
+        return true;
+    },
+    get_code: function() {
+        var mobile = $.trim($('#signupform-mobile').val());
+        if (!Member.check_phone(mobile)) {
+            $('.error').html('手机号不合法');
+            return false;
+        };
+        Member.get_code_time('getVcode');
+        $.post('#', {
+            mobile: mobile,
+            way: '1'
+        }, function(rep) {
+            alert(rep.info);
+
+        }, 'json');
+
+    },
+    get_code_time: function(id, s) {
+        if (s == undefined) {
+            s = 5;
+        }
+        var current = $('#' + id);
+        current.html('等待' + s + '秒');
+        current.attr('disabled', true);
+        current.removeAttr('onclick');
+        current.addClass('disabled');
+        s = s - 1;
+        if (s >= 0) {
+            timeoutId = setTimeout("Member.get_code_time('" + id + "'," + s + ")", 1000);
+        } else {
+            current.html('重新获取');
+            current.attr('disabled', false);
+            current.removeClass('disabled');
+            current.attr('onclick', 'Member.get_code_time("' + id + '");return false;');
+        }
+
+    },
+    clear_time_out: function() {
+        clearTimeout(timeoutId);
+    }
+
+}
+</script>
+
+</html>
